@@ -1,0 +1,39 @@
+{
+  "name": "locals-progress",
+  "authors": [
+    "Anonymous <anonymous@example.com>"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "locals-progress.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.1.0",
+    "progress-bubble": "^1.2.0",
+    "locals-style": "https://github.com/locals-world/locals-style.git",
+    "paper-progress": "^1.0.9"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
+  },
+  "_release": "6137123aa3",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "6137123aa3c33cb6637868368795497b3f1fd7a2"
+  },
+  "_source": "git://github.com/locals-world/locals-progress.git",
+  "_target": "master",
+  "_originalSource": "locals-world/locals-progress",
+  "_direct": true
+}
