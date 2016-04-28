@@ -15,16 +15,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <title>locals-progress Demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
     <link rel="import" href="../locals-progress.html">
+    <link rel="import" href="../../locals-style/locals-style.html">
+
+    <style type="text/css">
+    locals-progress {
+      width: 80%;
+    }
+
+    .whitepaper {
+      height: 20px;
+    }
+    </style>
   </head>
   <body unresolved>
-
-    <locals-progress max="100" value="20" stroke-width="10">
+  <div class="localscanvas">
+  <div class="localstypo">
+  <div class="localswrapper">
+    <div>
+    <locals-progress round max="100" value="56" size="120" fill="yellow">
     </locals-progress>
-
-    <script>
-  
-      
-    </script>
-
+    <p>value: 56 <br> fill: yellow</p>
+    </div>
+    <div>
+    <locals-progress round max="100" value="22" size="80">
+    </locals-progress>
+    <p>value: 22</p>
+    </div>
+    <div>
+    <locals-progress round max="100" value="98" size="40" disabled>
+    </locals-progress>
+    <p>value: 98 <br> disabled</p>
+    </div>
+  </div>
+    <div class="whitepaper"></div>
+    <div class="whitepaper"></div>
+    <p>value: 22</p>
+    <div class="whitepaper"></div>
+    <locals-progress max="100" value="22"></locals-progress>
+    <div class="whitepaper"></div>
+    <div class="whitepaper"></div>
+    <p>value: 75 • fill: red</p>
+    <div class="whitepaper"></div>
+    <locals-progress max="100" value="75" fill="red"></locals-progress>
+    <div class="whitepaper"></div>
+    <div class="whitepaper"></div>
+    <p>value: 75 • fill: lightblue, bg: darkblue</p>
+    <div class="whitepaper"></div>
+    <locals-progress max="100" value="75" fill="lightblue" bg="darkblue"></locals-progress>
+    <div class="whitepaper"></div>
+    <div class="whitepaper"></div>
+    <p>value: 56 • disabled • size: 20</p>
+    <div class="whitepaper"></div>
+    <locals-progress max="100" value="56" size="20" disabled></locals-progress>
+  </div>
+  </div>
   </body>
 </html>

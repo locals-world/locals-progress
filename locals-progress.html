@@ -1,7 +1,34 @@
+<!--
+@license
+Copyright (c) 2016 A-labs. All rights reserved.
+/////////////////
+LOCALS
+/////////////////
+-->
+
+
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../locals-style/locals-style.html">
+<link rel="import" href="../paper-progress/paper-progress.html">
+
 
 <!--
+A element to visualize progress in the Locals-style. The default is based on the paper-progress-component. Add max and value to determine these values. Add a size-attribute for height in px. Example:
+
+    <locals-progress max="100" value="22" size="100"></locals-progress>
+
+
+Add the attribute 'round' to show a round version of the component. Example:
+
+    <locals-progress round max="100" value="56" size="120">
+
+
+Add a fill or bg to change the colors. Example:
+
+    <locals-progress max="100" value="75" fill="lightblue" bg="darkblue"></locals-progress>
+
+
 @element locals-progress
 @demo demo/index.html
 @hero hero.svg
@@ -11,16 +38,32 @@
     <style>
         :host {
             display: block;
-            width: 100px;
-            height: 100px;
+            height: var(--locals-progress-height);
+            position: relative;
+            background: var(--locals-progress-background, radial-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2)));
+            --locals-progress-stroke-color: red;
+            --locals-progress-bg-stroke-color: green;
+            --locals-progress-stroke-linecap: blue;
+            --locals-progress-height: 44px;
+        }
+
+
+      :host([round]) {
+            display: block;
+            --prog-size: 100px;
+            width: var(--prog-size);
+            height: var(--prog-size);
             margin: 10px;
             position: relative;
             background: var(--locals-progress-background, radial-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2)));
             border-radius: 50%;
-            font-size: 24px;
-            text-shadow: 0 2px 2px rgba(0, 0, 0, 0.8);
-            color: #fff;
+            --locals-progress-stroke-color: red;
+            --locals-progress-bg-stroke-color: green;
+            --locals-progress-stroke-linecap: blue;
+            --locals-progress-height: 44px;
         }
+
+
         svg, div {
             opacity: 0;
             transition: opacity 150ms;
@@ -35,15 +78,30 @@
             left: 0;
         }
         #bgCircle {
-            stroke: var(--locals-progress-bg-stroke-color, rgba(255, 255, 255, 0.1));
+            stroke: var(--locals-progress-bg-stroke-color);
         }
         #svgCircle {
             transition: stroke-dashoffset 150ms;
-            stroke: var(--locals-progress-stroke-color, rgba(0, 240, 45, 0.8));
-            stroke-linecap: var(--locals-progress-stroke-linecap, round);
+            stroke: var(--locals-progress-stroke-color);
+            stroke-linecap: var(--locals-progress-stroke-linecap);
         }
+
+
+
+        paper-progress {
+            --paper-progress-container-color: var(--locals-progress-bg-stroke-color);
+            --paper-progress-active-color: var(--locals-progress-stroke-color);
+            --paper-progress-height: var(--locals-progress-height);
+            width: 100%;
+
+        }
+
+
     </style>
     <template>
+
+    <template is="dom-if" if="{{round}}">
+    <div class="round">
         <svg id="progressArc" width="100%" height="100%">
             <circle id="bgCircle" r$="[[_radius]]" cx$="[[_cx]]" cy$="[[_cy]]" fill="transparent"
                     stroke-width$="[[strokeWidth]]" />
@@ -52,7 +110,15 @@
                 stroke-dasharray$="[[_dasharray]]"
                 stroke-dashoffset$="[[_dashoffset]]"
                 transform$="[[_transform]]" />
+
         </svg>
+</div>
+    </template>
+
+    <template is="dom-if" if="{{!round}}">
+    <paper-progress class="transiting" value="{{value}}" max="{{max}}" disabled$="[[disabled]]"></paper-progress>
+    </template>
+
     </template>
 </dom-module>
 <script>
@@ -63,14 +129,38 @@
                 type: Number,
                 value: 0
             },
+
+            round: {
+                type: Boolean,
+                value: false
+            },
+
             max: {
                 type: Number,
                 value: 100
             },
-            strokeWidth: {
+            size: {
                 type: Number,
-                value: 6
+                value: 4,
+                observer: '_size'
             },
+
+            strokeWidth: {
+                type: Number
+            },
+
+            bg: {
+                type: String,
+                value: 'grey1',
+                observer: '_bg'
+            },
+
+            fill: {
+                type: String,
+                value: 'green',
+                observer: '_fill'
+            },
+
             _cx: {
                 type: Number,
                 value: 50
@@ -94,7 +184,14 @@
             _dashoffset: {
                 type: Number,
                 computed: '_computeDashOffset(value, max, _dasharray)'
-            }
+            },
+
+          disabled: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+            observer: '_disabled'
+          },
         },
         _computeRadius: function(_cx, _cy, strokeWidth) {
             return Math.max(0, Math.min(_cx, _cy) - strokeWidth / 2);
@@ -120,6 +217,42 @@
         },
         attributeChanged: function() {
             this.redraw();
+        },
+
+        _size: function(){
+            if (this.round) {
+            this.strokeWidth = this.size/2;
+            this.sizeinpx = this.size+'px';
+            this.customStyle['--prog-size'] = this.sizeinpx;
+            this.updateStyles();  
+        } else {
+            this.sizeinpx = this.size+'px';
+            this.customStyle['--locals-progress-height'] = this.sizeinpx;
+            this.updateStyles();   
         }
+        },
+
+      _bg:function(){
+        this.bgcolor = 'var(--locals-'+this.bg+')';
+        this.customStyle['--locals-progress-bg-stroke-color'] = this.bgcolor;
+        this.updateStyles();    
+      },
+
+      _fill:function(){
+        this.fillcolor = 'var(--locals-'+this.fill+')';
+        this.customStyle['--locals-progress-stroke-color'] = this.fillcolor;
+        this.updateStyles();    
+      },
+
+      _disabled: function(){
+        if (this.disabled) {
+        this.customStyle['--locals-progress-bg-stroke-color'] = 'var(--locals-grey1)';
+        this.customStyle['--locals-progress-stroke-color'] = 'var(--locals-grey3)';
+        this.updateStyles();
+        }
+      }
+
+
+
     });
 </script>

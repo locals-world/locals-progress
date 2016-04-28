@@ -19,7 +19,9 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#^1.1.0",
-    "progress-bubble": "^1.2.0"
+    "progress-bubble": "^1.2.0",
+    "locals-style": "https://github.com/locals-world/locals-style.git",
+    "paper-progress": "^1.0.9"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
