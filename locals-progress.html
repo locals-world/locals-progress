@@ -209,6 +209,7 @@ Add a fill or bg to change the colors. Example:
         },
 
         ready: function(){
+            var self = this;
             window.setInterval(function(){
                 self.timenow = Math.floor(Date.now() / 1000);
             }, 1000);
