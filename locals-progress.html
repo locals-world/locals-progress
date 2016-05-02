@@ -135,10 +135,24 @@ Add a fill or bg to change the colors. Example:
                 value: false
             },
 
+            start: {
+                type: Number
+            },
+
+            end: {
+                type: Number
+            },
+
             max: {
                 type: Number,
                 value: 100
             },
+
+            timenow: {
+                type: Number,
+                observer: '_timenow'
+            },
+
             size: {
                 type: Number,
                 value: 4,
@@ -193,6 +207,19 @@ Add a fill or bg to change the colors. Example:
             observer: '_disabled'
           },
         },
+
+        ready: function(){
+            var self = this;
+            window.setInterval(function(){
+                self.timenow = Math.floor(Date.now() / 1000);
+            }, 1000);
+        },
+
+        _timenow: function(){
+            //console.log('time: ', this.timenow);
+            this.value = (this.timenow - this.start) / (this.end - this.start) * 100;
+        },
+
         _computeRadius: function(_cx, _cy, strokeWidth) {
             return Math.max(0, Math.min(_cx, _cy) - strokeWidth / 2);
         },
