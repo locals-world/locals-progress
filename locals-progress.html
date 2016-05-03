@@ -6,34 +6,23 @@ LOCALS
 /////////////////
 -->
 
-
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../locals-style/locals-style.html">
 <link rel="import" href="../paper-progress/paper-progress.html">
 
-
 <!--
 A element to visualize progress in the Locals-style. The default is based on the paper-progress-component. Add max and value to determine these values. Add a size-attribute for height in px. Example:
 
     <locals-progress max="100" value="22" size="100"></locals-progress>
-
-
 Add the attribute 'round' to show a round version of the component. Example:
-
-    <locals-progress round max="100" value="56" size="120">
-
-
+<locals-progress round max="100" value="56" size="120">
 Add a fill or bg to change the colors. Example:
-
-    <locals-progress max="100" value="75" fill="lightblue" bg="darkblue"></locals-progress>
-
-
+<locals-progress max="100" value="75" fill="lightblue" bg="darkblue"></locals-progress>
 @element locals-progress
 @demo demo/index.html
 @hero hero.svg
 -->
-
 <dom-module id="locals-progress">
     <style>
         :host {
@@ -100,24 +89,24 @@ Add a fill or bg to change the colors. Example:
     </style>
     <template>
 
-    <template is="dom-if" if="{{round}}">
-    <div class="round">
-        <svg id="progressArc" width="100%" height="100%">
-            <circle id="bgCircle" r$="[[_radius]]" cx$="[[_cx]]" cy$="[[_cy]]" fill="transparent"
+        <template is="dom-if" if="{{round}}">
+            <div class="round">
+                <svg id="progressArc" width="100%" height="100%">
+                    <circle id="bgCircle" r$="[[_radius]]" cx$="[[_cx]]" cy$="[[_cy]]" fill="transparent"
                     stroke-width$="[[strokeWidth]]" />
-            <circle id="svgCircle" r$="[[_radius]]" cx$="[[_cx]]" cy$="[[_cy]]" fill="transparent"
+                    <circle id="svgCircle" r$="[[_radius]]" cx$="[[_cx]]" cy$="[[_cy]]" fill="transparent"
                 stroke-width$="[[strokeWidth]]"
                 stroke-dasharray$="[[_dasharray]]"
                 stroke-dashoffset$="[[_dashoffset]]"
                 transform$="[[_transform]]" />
 
-        </svg>
-</div>
-    </template>
+                </svg>
+            </div>
+        </template>
 
-    <template is="dom-if" if="{{!round}}">
-    <paper-progress class="transiting" value="{{value}}" max="{{max}}" disabled$="[[disabled]]"></paper-progress>
-    </template>
+        <template is="dom-if" if="{{!round}}">
+            <paper-progress class="transiting" value="{{value}}" max="{{max}}" disabled$="[[disabled]]"></paper-progress>
+        </template>
 
     </template>
 </dom-module>
@@ -200,25 +189,37 @@ Add a fill or bg to change the colors. Example:
                 computed: '_computeDashOffset(value, max, _dasharray)'
             },
 
-          disabled: {
-            type: Boolean,
-            value: false,
-            reflectToAttribute: true,
-            observer: '_disabled'
-          },
+            disabled: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true,
+                observer: '_disabled'
+            },
         },
 
-        ready: function(){
-            var self = this;
-            window.setInterval(function(){
-                self.timenow = Math.floor(Date.now() / 1000);
-            }, 1000);
+        ready: function() {
+            this.timenow = Math.floor(Date.now() / 1000);
+            if (this.timenow >= this.end) {
+                this.timenow = this.end;
+            } else {
+
+                var self = this;
+                this.timer = window.setInterval(function() {
+                    self.timenow = Math.floor(Date.now() / 1000);
+                    if (self.timenow >= self.end) {
+                        window.clearInterval(self.timer);
+                        self.fire('finished');
+                    }
+                }, 1000);
+            }
         },
 
-        _timenow: function(){
-            //console.log('time: ', this.timenow);
-            this.value = (this.end - this.start) / (this.end - this.timenow) * 100;
-            //this.value = this.end - this.timenow;
+        _timenow: function() {
+            this.value = (this.timenow - this.start) / (this.end - this.start) * 100;
+            // in case our timer still needs to start, value is negative. Dont allow this.
+            if (this.value < 0){
+                this.value = 0;
+            }
         },
 
         _computeRadius: function(_cx, _cy, strokeWidth) {
@@ -247,38 +248,38 @@ Add a fill or bg to change the colors. Example:
             this.redraw();
         },
 
-        _size: function(){
+        _size: function() {
             if (this.round) {
-            this.strokeWidth = this.size/2;
-            this.sizeinpx = this.size+'px';
-            this.customStyle['--prog-size'] = this.sizeinpx;
-            this.updateStyles();  
-        } else {
-            this.sizeinpx = this.size+'px';
-            this.customStyle['--locals-progress-height'] = this.sizeinpx;
-            this.updateStyles();   
-        }
+                this.strokeWidth = this.size / 2;
+                this.sizeinpx = this.size + 'px';
+                this.customStyle['--prog-size'] = this.sizeinpx;
+                this.updateStyles();
+            } else {
+                this.sizeinpx = this.size + 'px';
+                this.customStyle['--locals-progress-height'] = this.sizeinpx;
+                this.updateStyles();
+            }
         },
 
-      _bg:function(){
-        this.bgcolor = 'var(--locals-'+this.bg+')';
-        this.customStyle['--locals-progress-bg-stroke-color'] = this.bgcolor;
-        this.updateStyles();    
-      },
+        _bg: function() {
+            this.bgcolor = 'var(--locals-' + this.bg + ')';
+            this.customStyle['--locals-progress-bg-stroke-color'] = this.bgcolor;
+            this.updateStyles();
+        },
 
-      _fill:function(){
-        this.fillcolor = 'var(--locals-'+this.fill+')';
-        this.customStyle['--locals-progress-stroke-color'] = this.fillcolor;
-        this.updateStyles();    
-      },
+        _fill: function() {
+            this.fillcolor = 'var(--locals-' + this.fill + ')';
+            this.customStyle['--locals-progress-stroke-color'] = this.fillcolor;
+            this.updateStyles();
+        },
 
-      _disabled: function(){
-        if (this.disabled) {
-        this.customStyle['--locals-progress-bg-stroke-color'] = 'var(--locals-grey1)';
-        this.customStyle['--locals-progress-stroke-color'] = 'var(--locals-grey3)';
-        this.updateStyles();
+        _disabled: function() {
+            if (this.disabled) {
+                this.customStyle['--locals-progress-bg-stroke-color'] = 'var(--locals-grey1)';
+                this.customStyle['--locals-progress-stroke-color'] = 'var(--locals-grey3)';
+                this.updateStyles();
+            }
         }
-      }
 
 
 
