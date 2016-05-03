@@ -231,7 +231,7 @@ Add a fill or bg to change the colors. Example:
             return (1 - value / max) * _dasharray;
         },
         _computeTransform: function(_cx, _cy) {
-            return 'rotate(-90, ' + _cx + ', ' + _cy + ')';
+            return 'rotate(90, ' + _cx + ', ' + _cy + ')';
         },
         redraw: function() {
             this._cx = this.clientWidth / 2;
