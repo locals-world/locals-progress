@@ -94,7 +94,7 @@ Add a fill or bg to change the colors. Example:
         }
 
         locals-icon {
-            opacity: 0.5;
+            opacity: 0.35;
         }
 
 
@@ -115,7 +115,12 @@ Add a fill or bg to change the colors. Example:
                 </svg>
             <template is="dom-if" if="{{time}}">
             <div class="clock">
+            <template is="dom-if" if="{{smallclock}}">
+                <locals-icon icon="clock" iconcolor="darkgrey" small></locals-icon>
+            </template>
+            <template is="dom-if" if="{{!smallclock}}">
                 <locals-icon icon="clock" iconcolor="darkgrey"></locals-icon>
+            </template>
             </div>
             </template>
 
@@ -216,8 +221,15 @@ Add a fill or bg to change the colors. Example:
 
             time: {
                 type: Boolean,
+                value: false,
+                observer: '_time'
+            },
+
+            smallclock: {
+                type: Boolean,
                 value: false
             }
+
         },
 
         ready: function() {
@@ -302,6 +314,16 @@ Add a fill or bg to change the colors. Example:
                 this.customStyle['--locals-progress-stroke-color'] = 'var(--locals-grey3)';
                 this.updateStyles();
             }
+        },
+
+        _time: function(){
+            if(this.size > 50){
+                this.smallclock = false;
+            }
+            if(this.size < 50){
+                this.smallclock = true;
+            }
+
         }
 
 
