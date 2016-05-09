@@ -35,6 +35,7 @@ Add a fill or bg to change the colors. Example:
             --locals-progress-bg-stroke-color: green;
             --locals-progress-stroke-linecap: blue;
             --locals-progress-height: 44px;
+            --stroke-size: 5px solid var(--locals-blue);
         }
 
 
@@ -51,6 +52,8 @@ Add a fill or bg to change the colors. Example:
             --locals-progress-bg-stroke-color: green;
             --locals-progress-stroke-linecap: blue;
             --locals-progress-height: 44px;
+            border: var(--stroke-size);
+
         }
 
 
@@ -89,8 +92,12 @@ Add a fill or bg to change the colors. Example:
         .clock {
             width: var(--prog-size);
             height: var(--prog-size);
-            @apply(--layout-horizontal);
-            @apply(--layout-center-center);
+            border-radius: 50%;
+            border: 2px solid black;
+            box-sizing: border-box;
+            z-index: 9;
+/*            @apply(--layout-horizontal);
+            @apply(--layout-center-center);*/
         }
 
         locals-icon {
@@ -114,14 +121,7 @@ Add a fill or bg to change the colors. Example:
 
                 </svg>
             <template is="dom-if" if="{{time}}">
-            <div class="clock">
-            <template is="dom-if" if="{{smallclock}}">
-                <locals-icon icon="clock" iconcolor="darkgrey" small></locals-icon>
-            </template>
-            <template is="dom-if" if="{{!smallclock}}">
-                <locals-icon icon="clock" iconcolor="darkgrey"></locals-icon>
-            </template>
-            </div>
+
             </template>
 
             </div>
@@ -318,10 +318,12 @@ Add a fill or bg to change the colors. Example:
 
         _time: function(){
             if(this.size > 50){
-                this.smallclock = false;
+            this.customStyle['--stroke-size'] = '10px solid var(--locals-blue)';
+            this.updateStyles();
             }
             if(this.size < 50){
-                this.smallclock = true;
+            this.customStyle['--stroke-size'] = '5px solid var(--locals-blue)';
+            this.updateStyles();
             }
 
         }
